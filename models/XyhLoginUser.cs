@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace com.nbugs.xyh.models
 {
-    public class UserModel
+    public class XyhLoginUser
     {
         public string passtype { get; set; }
         public string passid { get; set; }

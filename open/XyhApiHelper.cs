@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using com.nbugs.xyh.models;
 using System.Net.Http.Headers;
+using System.Collections.Generic;
 
 namespace com.nbugs.xyh.open
 {
@@ -46,70 +47,187 @@ namespace com.nbugs.xyh.open
             }
             return token;
         }
-
-        /// <summary>
-        /// suguo.yao 2016-6-23
-        /// 通过用户CODE获取用户信息
-        /// </summary>
-        /// <param name="code"></param>
-        /// <returns></returns>
-        public static Result<UserModel> loadbycode(string code)
+        #region 获取登录对象的接口
+        public static class loginuser
         {
-            string url_token = string.Format(@"{0}/loginuser/loadbycode?client_id={1}&client_secret={2}&code={3}", appConfig.url, appConfig.client_id, appConfig.client_secret, code);
-
-            var httpclient = new HttpClient();
-            var content = httpclient.GetStringAsync(url_token).Result;
-            var JResult = JsonConvert.DeserializeObject<Result<UserModel>>(content);
-            return JResult;
-        }
-
-        //用户登录后，根据access_token获取登录用户信息
-        public static UserModel loadbytoken()
-        {
-            string url = string.Format(@"{0}/loginuser/loadbytoken?oauth_token={1}", appConfig.url, getToken());
-
-            var httpclient = new HttpClient();
-            var content = httpclient.GetStringAsync(url).Result;
-            var jresult = JsonConvert.DeserializeObject<Result<UserModel>>(content);
-            if (jresult.code == 0)
-                return jresult.r;
-            else
-                return null;
-        }
-
-        ///<summary>
-        /// suguo.yao 2016-11-28
-        ///</summary>
-        public static dynamic UserClassinfo()
-        {
-            string url = string.Format(@"{0}/ajaxLoaderSchoolOrgnization.do?method=ajaxJybJSON_LoadMyClass&oauth_token={1}&allClasses=true", appConfig.url, getToken());
-
-            HttpClient httpclient = new HttpClient();
-            var content = httpclient.GetStringAsync(url).Result;
-            var jresult = JsonConvert.DeserializeObject<dynamic>(content);
-            if (jresult.code == "0")
-                return jresult.rs;
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// suguo.yao 2016-11-28
-        /// 消息推送
-        /// </sumarry>
-        public static dynamic SubmitMessage(dynamic model, string token = "")
-        {
-            string url = string.Format(@"{0}/msg/pusher/batch?oauth_token={1}", appConfig.url, getToken());
-
-            using (var httpclient = new HttpClient())
+            /// <summary>
+            /// suguo.yao 2016-11-29
+            /// 获取用户授权认证时重定向到开放平台的URL
+            /// </summary>
+            public static string genLoginUrl(string url, string protalid = "")
             {
-                var str = JsonConvert.SerializeObject(model);
-                HttpContent httpcontent = new StringContent(str);
-                httpcontent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                HttpResponseMessage resMessage = httpclient.PostAsync(url, httpcontent).Result;
-                var ret = resMessage.Content.ReadAsStringAsync().Result;
-                return JsonConvert.DeserializeObject<dynamic>(ret);
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// suguo.yao 2016-6-23
+            /// 根据code临时码获取用户登录信息
+            /// </summary>
+            public static Result<XyhLoginUser> getLoginUserByCode(string code)
+            {
+                string url_token = string.Format(@"{0}/loginuser/loadbycode?client_id={1}&client_secret={2}&code={3}", appConfig.url, appConfig.client_id, appConfig.client_secret, code);
+
+                var httpclient = new HttpClient();
+                var content = httpclient.GetStringAsync(url_token).Result;
+                var JResult = JsonConvert.DeserializeObject<Result<XyhLoginUser>>(content);
+                return JResult;
+            }
+
+            /// <summary>
+            /// suguo.yao 2016-6-23
+            /// 根据用户oauth_token获取用户登录信息
+            /// </summary>
+            public static XyhLoginUser getLoginUserByToken()
+            {
+                string url = string.Format(@"{0}/loginuser/loadbytoken?oauth_token={1}", appConfig.url, getToken());
+
+                var httpclient = new HttpClient();
+                var content = httpclient.GetStringAsync(url).Result;
+                var jresult = JsonConvert.DeserializeObject<Result<XyhLoginUser>>(content);
+                if (jresult.code == 0)
+                    return jresult.r;
+                else
+                    return null;
             }
         }
+        #endregion
+
+        #region 获取用户信息的接口
+        public static class user
+        {
+            /// <summary>
+            /// suguo.yao 2016-11-29
+            /// 获取单个用户基本信息
+            /// </summary>
+            public static XyhUser get()
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// suguo.yao 2016-11-29
+            /// 获取多个用户基本信息
+            /// </summary>
+            public static List<XyhUser> list()
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// suguo.yao 2016-11-29
+            /// 列表形式获取机构内的用户信息
+            /// </summary>
+            public static List<XyhUser> deptUsers(string orgid, List<string> deptids, XyhUserLoaderParam param = null)
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// suguo.yao 2016-11-29
+            /// 分页形式获取机构内的用户信息
+            /// </summary>
+            public static DataPage<XyhUser> deptUsers(int page, int pagesize, string orgid, string usertype = "", XyhUserLoaderParam param = null)
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// suguo.yao 2016-11-29
+            /// 	获取部门及其部门内的人员信息
+            /// </summary>
+            public static List<XyhUser> deptWithUsers(string orgid, List<string> deptids, XyhUserLoaderParam param = null)
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// suguo.yao 2016-11-29
+            /// 分页形式获取机构下的全部用户信息
+            /// </summary>
+            public static DataPage<XyhUser> all(int page, int pagesize, string orgid, string usertype = "", XyhUserLoaderParam param = null)
+            {
+                throw new NotImplementedException();
+            }
+        }
+        #endregion
+
+        #region 获取机构部门信息的接口
+        public static class org
+        {
+            /// <summary>
+            /// suguo.yao 2016-11-29
+            /// 获取某一组织机构内部门的基本信息
+            /// </summary>
+            public static XyhOrgnization get(string orgid, string deptid, string properties = null)
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// suguo.yao 2016-11-29
+            /// 获取某一组织机构内多个部门的基本信息
+            /// </summary>
+            public static List<XyhOrgnization> list(string orgid, List<string> deptids, string properties = null)
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// suguo.yao 2016-11-29
+            /// 获取下级部门信息
+            /// </summary>
+            public static List<XyhOrgnization> sublist(string orgid, string parentid, List<string> types, bool withSelf, string properties = null)
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// suguo.yao 2016-11-29
+            /// 获取组织机构的树形数据
+            /// </summary>
+            public static XyhOrgnization tree(string orgid, List<string> types, string properties = null)
+            {
+                throw new NotImplementedException();
+            }
+        }
+        #endregion
+
+        #region 获取机构定义的用户扩展字段信息的接口
+        public static class orgext
+        {
+            /// <summary>
+            /// suguo.yao 2016-11-29
+            /// 获取某一组织机构内部门的基本信息
+            /// </summary>
+            public static string get(string orgid, string usertype)
+            {
+                throw new NotImplementedException();
+            }
+        }
+        #endregion
+
+        #region 消息处理的接口
+        public static class msg
+        {
+            /// <summary>
+            /// suguo.yao 2016-11-28
+            /// 消息推送
+            /// </sumarry>
+            public static bool batch(dynamic model)
+            {
+                string url = string.Format(@"{0}/msg/pusher/batch?oauth_token={1}", appConfig.url, getToken());
+
+                using (var httpclient = new HttpClient())
+                {
+                    var str = JsonConvert.SerializeObject(model);
+                    HttpContent httpcontent = new StringContent(str);
+                    httpcontent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    HttpResponseMessage resMessage = httpclient.PostAsync(url, httpcontent).Result;
+                    var ret = resMessage.Content.ReadAsStringAsync().Result;
+                    return JsonConvert.DeserializeObject<dynamic>(ret);
+                }
+            }
+        }
+        #endregion
     }
 }
