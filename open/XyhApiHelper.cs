@@ -60,10 +60,11 @@ namespace com.nbugs.xyh.open
             /// <summary>
             /// suguo.yao 2016-11-29
             /// 获取用户授权认证时重定向到开放平台的URL
+            /// 在原协议上增加了funcid和urlid，以便为主从应用跳转生成url
             /// </summary>
-            public static string genLoginUrl(string url, string protalid = "")
+            public static string genLoginUrl(string url, string protalid = "", string funcid = "", string urlid = "")
             {
-                throw new NotImplementedException();
+                return string.Format(@"{0}/oauth2/user/authorize?client_id={1}&response_type=code&redirect_uri={2}{3}{4}{5}", appConfig.url, appConfig.client_id, System.Net.WebUtility.UrlEncode(url), string.IsNullOrEmpty(protalid) ? "" : "&portalid=" + protalid, string.IsNullOrEmpty(funcid) ? "" : "&funcid=" + funcid, string.IsNullOrEmpty(urlid) ? "" : "&urlid=" + urlid);
             }
 
             /// <summary>
