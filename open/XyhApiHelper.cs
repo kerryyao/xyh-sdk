@@ -4,6 +4,7 @@ using System.Net.Http;
 using com.nbugs.xyh.models;
 using System.Net.Http.Headers;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace com.nbugs.xyh.open
 {
@@ -31,8 +32,7 @@ namespace com.nbugs.xyh.open
                     return token;
 
                 string url = string.Format(@"{0}/oauth2/token?grant_type=client_credentials&client_id={1}&client_secret={2}", appConfig.url, appConfig.client_id, appConfig.client_secret);
-                var httpclient = new HttpClient();
-                var contentstring = httpclient.GetStringAsync(url).Result;
+                var contentstring = getHttpContent(url).Result;
                 var content = JsonConvert.DeserializeObject<dynamic>(contentstring);
                 token = (string)(content["oauth_token"] ?? string.Empty);
                 if (!string.IsNullOrEmpty(token))
@@ -47,6 +47,13 @@ namespace com.nbugs.xyh.open
             }
             return token;
         }
+
+        static async Task<string> getHttpContent(string uri)
+        {
+            var httpclient = new HttpClient();
+            return await httpclient.GetStringAsync(uri);
+        }
+
         #region 获取登录对象的接口
         public static class loginuser
         {
@@ -67,8 +74,7 @@ namespace com.nbugs.xyh.open
             {
                 string url_token = string.Format(@"{0}/loginuser/loadbycode?client_id={1}&client_secret={2}&code={3}", appConfig.url, appConfig.client_id, appConfig.client_secret, code);
 
-                var httpclient = new HttpClient();
-                var content = httpclient.GetStringAsync(url_token).Result;
+                var content = getHttpContent(url_token).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhLoginUser>>(content);
                 return JResult;
             }
@@ -81,8 +87,7 @@ namespace com.nbugs.xyh.open
             {
                 string url = string.Format(@"{0}/loginuser/loadbytoken?oauth_token={1}", appConfig.url, getToken());
 
-                var httpclient = new HttpClient();
-                var content = httpclient.GetStringAsync(url).Result;
+                var content = getHttpContent(url).Result;
                 var jresult = JsonConvert.DeserializeObject<Result<XyhLoginUser>>(content);
                 if (jresult.code == 0)
                     return jresult.r;
