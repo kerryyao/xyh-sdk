@@ -5,6 +5,7 @@ using com.nbugs.xyh.models;
 using System.Net.Http.Headers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace com.nbugs.xyh.open
 {
@@ -48,7 +49,7 @@ namespace com.nbugs.xyh.open
             return token;
         }
 
-        public static async Task<string> getHttpContent(string uri)
+        internal static async Task<string> getHttpContent(string uri)
         {
             var httpclient = new HttpClient();
             return await httpclient.GetStringAsync(uri);
@@ -101,6 +102,24 @@ namespace com.nbugs.xyh.open
         }
         #endregion
 
+        static string getLoaderParam(this string url, XyhUserLoaderParam param)
+        {
+            if (param == null)
+                return url;
+
+            StringBuilder p = new StringBuilder();
+            if (param.withUserRoleDetail)
+                p.Append(@"&withUserRoleDetail=true");
+            if (param.withCard)
+                p.Append(@"&withCard=true");
+            if (param.withContacts)
+                p.Append(@"&withContacts=true");
+            if (param.withOrgExtInfo)
+                p.Append(@"&withOrgExtInfo=true");
+
+            return url + p.ToString();
+        }
+
         #region 获取用户信息的接口
         public static class user
         {
@@ -108,18 +127,32 @@ namespace com.nbugs.xyh.open
             /// suguo.yao 2016-11-29
             /// 获取单个用户基本信息
             /// </summary>
-            public static XyhUser get()
+            public static XyhUser get(string orgid, string userid, XyhUserLoaderParam param = null)
             {
-                throw new NotImplementedException();
+                string url = string.Format(@"{0}/user/get?orgid={1}&userid={2}&oauth_token={3} ", appConfig.url, orgid, userid, getToken());
+
+                var content = getHttpContent(url.getLoaderParam(param)).Result;
+                var JResult = JsonConvert.DeserializeObject<Result<XyhUser>>(content);
+                if (JResult.code == 0)
+                    return JResult.r;
+                else
+                    return null;
             }
 
             /// <summary>
             /// suguo.yao 2016-11-29
             /// 获取多个用户基本信息
             /// </summary>
-            public static List<XyhUser> list()
+            public static List<XyhUser> list(string orgid, string userids, XyhUserLoaderParam param = null)
             {
-                throw new NotImplementedException();
+                string url = string.Format(@"{0}/user/list?orgid={1}&userids={2}&oauth_token={3} ", appConfig.url, orgid, userids, getToken());
+
+                var content = getHttpContent(url.getLoaderParam(param)).Result;
+                var JResult = JsonConvert.DeserializeObject<Result<XyhUser>>(content);
+                if (JResult.code == 0)
+                    return JResult.rs;
+                else
+                    return null;
             }
 
             /// <summary>
@@ -128,25 +161,46 @@ namespace com.nbugs.xyh.open
             /// </summary>
             public static List<XyhUser> deptUsers(string orgid, List<string> deptids, XyhUserLoaderParam param = null)
             {
-                throw new NotImplementedException();
+                string url = string.Format(@"{0}/orguser/list?orgid={1}&deptids={2}&oauth_token={3} ", appConfig.url, orgid, deptids, getToken());
+
+                var content = getHttpContent(url.getLoaderParam(param)).Result;
+                var JResult = JsonConvert.DeserializeObject<Result<XyhUser>>(content);
+                if (JResult.code == 0)
+                    return JResult.rs;
+                else
+                    return null;
             }
 
             /// <summary>
             /// suguo.yao 2016-11-29
             /// 分页形式获取机构内的用户信息
             /// </summary>
-            public static DataPage<XyhUser> deptUsers(int page, int pagesize, string orgid, string usertype = "", XyhUserLoaderParam param = null)
+            public static DataPage<XyhUser> deptUsers(int page, int pagesize, string orgid, List<string> deptids, XyhUserLoaderParam param = null)
             {
-                throw new NotImplementedException();
+                string url = string.Format(@"{0}/orguser/page?orgid={1}&deptids={2}&oauth_token={3}&page={4}&pagesize={5}", appConfig.url, orgid, deptids, getToken(), page, pagesize);
+
+                var content = getHttpContent(url.getLoaderParam(param)).Result;
+                var JResult = JsonConvert.DeserializeObject<Result<DataPage<XyhUser>>>(content);
+                if (JResult.code == 0)
+                    return JResult.r;
+                else
+                    return null;
             }
 
             /// <summary>
             /// suguo.yao 2016-11-29
-            /// 	获取部门及其部门内的人员信息
+            /// 获取部门及其部门内的人员信息
             /// </summary>
-            public static List<XyhUser> deptWithUsers(string orgid, List<string> deptids, XyhUserLoaderParam param = null)
+            public static List<XyhOrgnization> deptWithUsers(string orgid, List<string> deptids, XyhUserLoaderParam param = null)
             {
-                throw new NotImplementedException();
+                string url = string.Format(@"{0}/orguser/map?orgid={1}&deptids={2}&oauth_token={3} ", appConfig.url, orgid, deptids, getToken());
+
+                var content = getHttpContent(url.getLoaderParam(param)).Result;
+                var JResult = JsonConvert.DeserializeObject<Result<XyhOrgnization>>(content);
+                if (JResult.code == 0)
+                    return JResult.rs;
+                else
+                    return null;
             }
 
             /// <summary>
@@ -155,7 +209,15 @@ namespace com.nbugs.xyh.open
             /// </summary>
             public static DataPage<XyhUser> all(int page, int pagesize, string orgid, string usertype = "", XyhUserLoaderParam param = null)
             {
-                throw new NotImplementedException();
+                string url = string.Format(@"{0}/orguser/all?orgid={1}&oauth_token={2}&page={3}&pagesize={4}", appConfig.url, orgid, getToken(), page, pagesize);
+                if (!string.IsNullOrEmpty(usertype))
+                    url += string.Format("&usertype={0}", usertype);
+                var content = getHttpContent(url.getLoaderParam(param)).Result;
+                var JResult = JsonConvert.DeserializeObject<Result<DataPage<XyhUser>>>(content);
+                if (JResult.code == 0)
+                    return JResult.r;
+                else
+                    return null;
             }
         }
         #endregion
