@@ -71,13 +71,16 @@ namespace com.nbugs.xyh.open
             /// suguo.yao 2016-6-23
             /// 根据code临时码获取用户登录信息
             /// </summary>
-            public static Result<XyhLoginUser> getLoginUserByCode(string code)
+            public static XyhLoginUser getLoginUserByCode(string code)
             {
                 string url_token = string.Format(@"{0}/loginuser/loadbycode?client_id={1}&client_secret={2}&code={3}", appConfig.url, appConfig.client_id, appConfig.client_secret, code);
 
                 var content = getHttpContent(url_token).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhLoginUser>>(content);
-                return JResult;
+                if (JResult.code == 0)
+                    return JResult.r;
+                else
+                    return null;
             }
 
             /// <summary>
