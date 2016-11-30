@@ -48,7 +48,7 @@ namespace com.nbugs.xyh.open
             return token;
         }
 
-        static async Task<string> getHttpContent(string uri)
+        public static async Task<string> getHttpContent(string uri)
         {
             var httpclient = new HttpClient();
             return await httpclient.GetStringAsync(uri);
