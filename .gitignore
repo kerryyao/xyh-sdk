@@ -32,3 +32,4 @@
 .vscode/
 bin/
 obj/
+project.lock.json
