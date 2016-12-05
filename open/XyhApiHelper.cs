@@ -55,6 +55,18 @@ namespace com.nbugs.xyh.open
             return await httpclient.GetStringAsync(uri);
         }
 
+        //进行小虫二次urlencoding
+        internal static string getUrlEncodeTypes(this List<string> types)
+        {
+            //进行URLENCODE转换
+            string typestring = string.Empty;
+            foreach (var t in types)
+            {
+                typestring += "," + System.Net.WebUtility.UrlEncode(System.Net.WebUtility.UrlEncode(t));
+            }
+            return typestring.TrimStart(',');
+        }
+
         #region 获取登录对象的接口
         public static class loginuser
         {
@@ -240,16 +252,39 @@ namespace com.nbugs.xyh.open
             /// </summary>
             public static List<XyhOrgnization> list(string orgid, List<string> deptids, string properties = null)
             {
-                throw new NotImplementedException();
+                string url = string.Format(@"{0}/org/list?orgId={1}&deptIds={2}&oauth_token={3}", appConfig.url, orgid, deptids.getUrlEncodeTypes(), getToken());
+
+                var content = getHttpContent(url).Result;
+                var JResult = JsonConvert.DeserializeObject<Result<XyhOrgnization>>(content);
+                if (JResult.code == 0)
+                    return JResult.rs;
+                else
+                    return null;
             }
 
             /// <summary>
             /// suguo.yao 2016-11-29
-            /// 获取下级部门信息
+            /// 获取下级部门信息，经测试只能获取下一级子部门
             /// </summary>
-            public static List<XyhOrgnization> sublist(string orgid, string parentid, List<string> types, bool withSelf, string properties = null)
+            public static List<XyhOrgnization> sublist(string orgid, string parentid, List<string> types, bool withSelf = false, string properties = null)
             {
-                throw new NotImplementedException();
+
+                string url = string.Format(@"{0}/org/sublist?orgid={1}&parentid={2}&oauth_token={3}", appConfig.url, orgid, parentid, getToken());
+
+                if (types != null && types.Count > 0)
+                {
+                    url += string.Format(@"&types={0}", types.getUrlEncodeTypes());
+                }
+                if (withSelf)
+                {
+                    url += "&withSelf=true";
+                }
+                var content = getHttpContent(url).Result;
+                var JResult = JsonConvert.DeserializeObject<Result<XyhOrgnization>>(content);
+                if (JResult.code == 0)
+                    return JResult.rs;
+                else
+                    return null;
             }
 
             /// <summary>
@@ -258,7 +293,18 @@ namespace com.nbugs.xyh.open
             /// </summary>
             public static XyhOrgnization tree(string orgid, List<string> types, string properties = null)
             {
-                throw new NotImplementedException();
+                string url = string.Format(@"{0}/org/tree?orgid={1}&oauth_token={2}", appConfig.url, orgid, getToken());
+
+                if (types != null && types.Count > 0)
+                {
+                    url += string.Format(@"&types={0}", types.getUrlEncodeTypes());
+                }
+                var content = getHttpContent(url).Result;
+                var JResult = JsonConvert.DeserializeObject<Result<XyhOrgnization>>(content);
+                if (JResult.code == 0)
+                    return JResult.r;
+                else
+                    return null;
             }
         }
         #endregion
