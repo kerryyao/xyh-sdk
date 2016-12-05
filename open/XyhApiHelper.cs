@@ -243,7 +243,14 @@ namespace com.nbugs.xyh.open
             /// </summary>
             public static XyhOrgnization get(string orgid, string deptid, string properties = null)
             {
-                throw new NotImplementedException();
+                string url = string.Format(@"{0}/org/get?orgid={1}&deptid={2}&oauth_token={3}", appConfig.url, orgid, deptid, getToken());
+
+                var content = getHttpContent(url).Result;
+                var JResult = JsonConvert.DeserializeObject<Result<XyhOrgnization>>(content);
+                if (JResult.code == 0)
+                    return JResult.r;
+                else
+                    return null;
             }
 
             /// <summary>
@@ -252,7 +259,7 @@ namespace com.nbugs.xyh.open
             /// </summary>
             public static List<XyhOrgnization> list(string orgid, List<string> deptids, string properties = null)
             {
-                string url = string.Format(@"{0}/org/list?orgId={1}&deptIds={2}&oauth_token={3}", appConfig.url, orgid, deptids.getUrlEncodeTypes(), getToken());
+                string url = string.Format(@"{0}/org/list?orgId={1}&deptids={2}&oauth_token={3}", appConfig.url, orgid, deptids.getUrlEncodeTypes(), getToken());
 
                 var content = getHttpContent(url).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhOrgnization>>(content);
@@ -315,10 +322,18 @@ namespace com.nbugs.xyh.open
             /// <summary>
             /// suguo.yao 2016-11-29
             /// 获取某一组织机构内部门的基本信息
+            /// <param name="usertype">教师、学生</param>
             /// </summary>
-            public static string get(string orgid, string usertype)
+            public static List<string> get(string orgid, string usertype)
             {
-                throw new NotImplementedException();
+                string url = string.Format(@"{0}/orgext/get?orgid={1}&usertype={2}&oauth_token={3}", appConfig.url, orgid, usertype, getToken());
+
+                var content = getHttpContent(url).Result;
+                var JResult = JsonConvert.DeserializeObject<Result<string>>(content);
+                if (JResult.code == 0)
+                    return JResult.rs;
+                else
+                    return null;
             }
         }
         #endregion
@@ -328,9 +343,9 @@ namespace com.nbugs.xyh.open
         {
             /// <summary>
             /// suguo.yao 2016-11-28
-            /// 消息推送
+            /// 文本消息推送
             /// </sumarry>
-            public static bool batch(dynamic model)
+            public static bool batch(XyhMessage<XyhTextMessage> model)
             {
                 string url = string.Format(@"{0}/msg/pusher/batch?oauth_token={1}", appConfig.url, getToken());
 
@@ -341,7 +356,34 @@ namespace com.nbugs.xyh.open
                     httpcontent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                     HttpResponseMessage resMessage = httpclient.PostAsync(url, httpcontent).Result;
                     var ret = resMessage.Content.ReadAsStringAsync().Result;
-                    return JsonConvert.DeserializeObject<dynamic>(ret);
+                    var r = JsonConvert.DeserializeObject<Result<string>>(ret);
+                    if (r.code == 0)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+
+            /// <summary>
+            /// suguo.yao 2016-11-28
+            /// 图文消息推送
+            /// </sumarry>
+            public static bool batch(XyhMessage<XyhNewsList> model)
+            {
+                string url = string.Format(@"{0}/msg/pusher/batch?oauth_token={1}", appConfig.url, getToken());
+
+                using (var httpclient = new HttpClient())
+                {
+                    var str = JsonConvert.SerializeObject(model);
+                    HttpContent httpcontent = new StringContent(str);
+                    httpcontent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    HttpResponseMessage resMessage = httpclient.PostAsync(url, httpcontent).Result;
+                    var ret = resMessage.Content.ReadAsStringAsync().Result;
+                    var r = JsonConvert.DeserializeObject<Result<string>>(ret);
+                    if (r.code == 0)
+                        return true;
+                    else
+                        return false;
                 }
             }
         }
