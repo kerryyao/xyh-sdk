@@ -9,6 +9,7 @@
 校园号sdk使用说明
 
  1. 配置：
+ 
 com.nbugs.xyh.appConfig.client_id = "client_id"
 
 com.nbugs.xyh.appConfig.client_secret = "client_secret";
