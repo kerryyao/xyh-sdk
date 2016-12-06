@@ -10,11 +10,11 @@
 
  1. 配置：
  
- 2. com.nbugs.xyh.appConfig.client_id = "client_id"
+ ### 2. com.nbugs.xyh.appConfig.client_id = "client_id"
 
- 2. com.nbugs.xyh.appConfig.client_secret = "client_secret";
+ ### 2. com.nbugs.xyh.appConfig.client_secret = "client_secret";
 
- 2. com.nbugs.xyh.appConfig.debug = false;
+ ### 2. com.nbugs.xyh.appConfig.debug = false;
 
  1. 开放平台SDK接口使用说明
 
