@@ -10,12 +10,12 @@
 
  1. 配置：
  
-com.nbugs.xyh.appConfig.client_id = "client_id"
+ 2. com.nbugs.xyh.appConfig.client_id = "client_id"
 
-com.nbugs.xyh.appConfig.client_secret = "client_secret";
+ 2. com.nbugs.xyh.appConfig.client_secret = "client_secret";
 
-com.nbugs.xyh.appConfig.debug = false;
+ 2. com.nbugs.xyh.appConfig.debug = false;
 
- 2. 开放平台SDK接口使用说明
+ 1. 开放平台SDK接口使用说明
 
 开发者只需要访问com.nbugs.xyh.open.XyhApiHelper类就可以获取所有接口的访问入口，该类以static方式提供了若干接口实例，开发者可直接调用。
