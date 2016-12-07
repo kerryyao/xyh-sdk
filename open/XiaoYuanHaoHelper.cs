@@ -5,7 +5,12 @@ using Newtonsoft.Json;
 
 namespace com.nbugs.xyh.open
 {
-        public static class XiaoYuanHaoHelper
+    /// <summary>
+    /// suguo.yao 2016-12-7
+    /// 校园号PC端用户认证，目前仅适用PC端，服务由小虫技术二队维护
+    /// 这里的token指用户级别token
+    /// </summary>
+    public static class XiaoYuanHaoHelper
     {
         static async Task<string> getHttpContent(string uri)
         {
