@@ -173,7 +173,7 @@ namespace com.nbugs.xyh.open
             /// </summary>
             public static List<XyhUser> deptUsers(string orgid, List<string> deptids, XyhUserLoaderParam param = null)
             {
-                string url = string.Format(@"{0}/orguser/list?orgid={1}&deptids={2}&oauth_token={3} ", appConfig.url, orgid, deptids, getToken());
+                string url = string.Format(@"{0}/orguser/list?orgid={1}&deptids={2}&oauth_token={3} ", appConfig.url, orgid, deptids.getUrlEncodeTypes(), getToken());
 
                 var content = getHttpContent(url.getLoaderParam(param)).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhUser>>(content);
@@ -189,7 +189,7 @@ namespace com.nbugs.xyh.open
             /// </summary>
             public static DataPage<XyhUser> deptUsers(int page, int pagesize, string orgid, List<string> deptids, XyhUserLoaderParam param = null)
             {
-                string url = string.Format(@"{0}/orguser/page?orgid={1}&deptids={2}&oauth_token={3}&page={4}&pagesize={5}", appConfig.url, orgid, deptids, getToken(), page, pagesize);
+                string url = string.Format(@"{0}/orguser/page?orgid={1}&deptids={2}&oauth_token={3}&page={4}&pagesize={5}", appConfig.url, orgid, deptids.getUrlEncodeTypes(), getToken(), page, pagesize);
 
                 var content = getHttpContent(url.getLoaderParam(param)).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<DataPage<XyhUser>>>(content);
@@ -205,7 +205,7 @@ namespace com.nbugs.xyh.open
             /// </summary>
             public static List<XyhOrgnization> deptWithUsers(string orgid, List<string> deptids, XyhUserLoaderParam param = null)
             {
-                string url = string.Format(@"{0}/orguser/map?orgid={1}&deptids={2}&oauth_token={3} ", appConfig.url, orgid, deptids, getToken());
+                string url = string.Format(@"{0}/orguser/map?orgid={1}&deptids={2}&oauth_token={3} ", appConfig.url, orgid, deptids.getUrlEncodeTypes(), getToken());
 
                 var content = getHttpContent(url.getLoaderParam(param)).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhOrgnization>>(content);
