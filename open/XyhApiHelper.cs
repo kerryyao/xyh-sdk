@@ -123,11 +123,11 @@ namespace com.nbugs.xyh.open
             if (param.withUserRoleDetail)
                 p.Append(@"&withUserRoleDetail=true");
             if (param.withCard)
-                p.Append(@"&withCard=true");
+                p.Append(@"&with_card=true");
             if (param.withContacts)
-                p.Append(@"&withContacts=true");
+                p.Append(@"&with_contacts=true");
             if (param.withOrgExtInfo)
-                p.Append(@"&withOrgExtInfo=true");
+                p.Append(@"&with_orgext=true");
 
             return url + p.ToString();
         }
