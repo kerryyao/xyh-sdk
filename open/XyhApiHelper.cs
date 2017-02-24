@@ -153,11 +153,11 @@ namespace com.nbugs.xyh.open
 
             /// <summary>
             /// suguo.yao 2016-11-29
-            /// 获取多个用户基本信息
+            /// 获取多个用户基本信息,增加roles
             /// </summary>
-            public static List<XyhUser> list(string orgid, string userids, XyhUserLoaderParam param = null)
+            public static List<XyhUser> list(string orgid, string userids, string roles = null, XyhUserLoaderParam param = null)
             {
-                string url = string.Format(@"{0}/user/list?orgid={1}&userids={2}&oauth_token={3} ", appConfig.url, orgid, userids, getToken());
+                string url = string.Format(@"{0}/user/list?orgid={1}&userids={2}{3}&oauth_token={4} ", appConfig.url, orgid, userids, string.IsNullOrEmpty(roles) ? "" : (@"&roles=" + roles), getToken());
 
                 var content = getHttpContent(url.getLoaderParam(param)).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhUser>>(content);
