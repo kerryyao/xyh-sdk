@@ -173,7 +173,12 @@ namespace com.nbugs.xyh.open
             /// </summary>
             public static List<XyhUser> deptUsers(string orgid, List<string> deptids, string roles = null, XyhUserLoaderParam param = null)
             {
-                string url = string.Format(@"{0}/orguser/list?orgid={1}&deptids={2}{3}&oauth_token={4} ", appConfig.url, orgid, deptids.getUrlEncodeTypes(), string.IsNullOrEmpty(roles) ? "" : (@"&roles=" + roles), getToken());
+                string rolestring = string.Empty;
+                if (!string.IsNullOrEmpty(roles))
+                {
+                    rolestring = @"&roles=" + System.Net.WebUtility.UrlEncode(System.Net.WebUtility.UrlEncode(roles));
+                }
+                string url = string.Format(@"{0}/orguser/list?orgid={1}&deptids={2}{3}&oauth_token={4} ", appConfig.url, orgid, deptids.getUrlEncodeTypes(), rolestring, getToken());
 
                 var content = getHttpContent(url.getLoaderParam(param)).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhUser>>(content);
