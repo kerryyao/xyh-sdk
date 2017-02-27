@@ -123,11 +123,11 @@ namespace com.nbugs.xyh.open
             if (param.withUserRoleDetail)
                 p.Append(@"&withUserRoleDetail=true");
             if (param.withCard)
-                p.Append(@"&withCard=true");
+                p.Append(@"&with_card=true");
             if (param.withContacts)
-                p.Append(@"&withContacts=true");
+                p.Append(@"&with_contacts=true");
             if (param.withOrgExtInfo)
-                p.Append(@"&withOrgExtInfo=true");
+                p.Append(@"&with_orgext=true");
 
             return url + p.ToString();
         }
@@ -169,11 +169,16 @@ namespace com.nbugs.xyh.open
 
             /// <summary>
             /// suguo.yao 2016-11-29
-            /// 列表形式获取机构内的用户信息
+            /// 列表形式获取机构内的用户信息,增加roles
             /// </summary>
-            public static List<XyhUser> deptUsers(string orgid, List<string> deptids, XyhUserLoaderParam param = null)
+            public static List<XyhUser> deptUsers(string orgid, List<string> deptids, string roles = null, XyhUserLoaderParam param = null)
             {
-                string url = string.Format(@"{0}/orguser/list?orgid={1}&deptids={2}&oauth_token={3} ", appConfig.url, orgid, deptids, getToken());
+                string rolestring = string.Empty;
+                if (!string.IsNullOrEmpty(roles))
+                {
+                    rolestring = @"&roles=" + System.Net.WebUtility.UrlEncode(System.Net.WebUtility.UrlEncode(roles));
+                }
+                string url = string.Format(@"{0}/orguser/list?orgid={1}&deptids={2}{3}&oauth_token={4} ", appConfig.url, orgid, deptids.getUrlEncodeTypes(), rolestring, getToken());
 
                 var content = getHttpContent(url.getLoaderParam(param)).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhUser>>(content);
@@ -189,7 +194,7 @@ namespace com.nbugs.xyh.open
             /// </summary>
             public static DataPage<XyhUser> deptUsers(int page, int pagesize, string orgid, List<string> deptids, XyhUserLoaderParam param = null)
             {
-                string url = string.Format(@"{0}/orguser/page?orgid={1}&deptids={2}&oauth_token={3}&page={4}&pagesize={5}", appConfig.url, orgid, deptids, getToken(), page, pagesize);
+                string url = string.Format(@"{0}/orguser/page?orgid={1}&deptids={2}&oauth_token={3}&page={4}&pagesize={5}", appConfig.url, orgid, deptids.getUrlEncodeTypes(), getToken(), page, pagesize);
 
                 var content = getHttpContent(url.getLoaderParam(param)).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<DataPage<XyhUser>>>(content);
@@ -205,7 +210,7 @@ namespace com.nbugs.xyh.open
             /// </summary>
             public static List<XyhOrgnization> deptWithUsers(string orgid, List<string> deptids, XyhUserLoaderParam param = null)
             {
-                string url = string.Format(@"{0}/orguser/map?orgid={1}&deptids={2}&oauth_token={3} ", appConfig.url, orgid, deptids, getToken());
+                string url = string.Format(@"{0}/orguser/map?orgid={1}&deptids={2}&oauth_token={3} ", appConfig.url, orgid, deptids.getUrlEncodeTypes(), getToken());
 
                 var content = getHttpContent(url.getLoaderParam(param)).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhOrgnization>>(content);

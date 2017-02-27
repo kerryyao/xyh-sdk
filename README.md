@@ -19,3 +19,5 @@ com.nbugs.xyh.appConfig.debug = false;
  1. 开放平台SDK接口使用说明
 
 开发者只需要访问com.nbugs.xyh.open.XyhApiHelper类就可以获取所有接口的访问入口，该类以static方式提供了若干接口实例，开发者可直接调用。
+
+1. 校园号新建用户中心，其中部分结构发生变动，增加相应的接口类XiaoYuanHaoHelper.cs
