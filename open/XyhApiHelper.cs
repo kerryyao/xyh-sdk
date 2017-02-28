@@ -210,7 +210,7 @@ namespace com.nbugs.xyh.open
             /// </summary>
             public static List<XyhOrgnization> deptWithUsers(string orgid, List<string> deptids, XyhUserLoaderParam param = null)
             {
-                string url = string.Format(@"{0}/orguser/map?orgid={1}&deptids={2}&oauth_token={3} ", appConfig.url, orgid, deptids.getUrlEncodeTypes(), getToken());
+                string url = string.Format(@"{0}/orguser/map?orgid={1}&deptids={2}&oauth_token={3}", appConfig.url, orgid, deptids.getUrlEncodeTypes(), getToken());
 
                 var content = getHttpContent(url.getLoaderParam(param)).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhOrgnization>>(content);
