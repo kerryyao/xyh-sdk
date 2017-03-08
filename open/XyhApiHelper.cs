@@ -121,7 +121,7 @@ namespace com.nbugs.xyh.open
 
             StringBuilder p = new StringBuilder();
             if (param.withUserRoleDetail)
-                p.Append(@"&withUserRoleDetail=true");
+                p.Append(@"&with_roledetail=true");
             if (param.withCard)
                 p.Append(@"&with_card=true");
             if (param.withContacts)
@@ -141,7 +141,7 @@ namespace com.nbugs.xyh.open
             /// </summary>
             public static XyhUser get(string orgid, string userid, XyhUserLoaderParam param = null)
             {
-                string url = string.Format(@"{0}/user/get?orgid={1}&userid={2}&oauth_token={3} ", appConfig.url, orgid, userid, getToken());
+                string url = string.Format(@"{0}/user/get?orgid={1}&userid={2}&oauth_token={3}", appConfig.url, orgid, userid, getToken());
 
                 var content = getHttpContent(url.getLoaderParam(param)).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhUser>>(content);
@@ -157,7 +157,7 @@ namespace com.nbugs.xyh.open
             /// </summary>
             public static List<XyhUser> list(string orgid, string userids, XyhUserLoaderParam param = null)
             {
-                string url = string.Format(@"{0}/user/list?orgid={1}&userids={2}&oauth_token={3} ", appConfig.url, orgid, userids, getToken());
+                string url = string.Format(@"{0}/user/list?orgid={1}&userids={2}&oauth_token={3}", appConfig.url, orgid, userids, getToken());
 
                 var content = getHttpContent(url.getLoaderParam(param)).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhUser>>(content);
@@ -178,7 +178,7 @@ namespace com.nbugs.xyh.open
                 {
                     rolestring = @"&roles=" + System.Net.WebUtility.UrlEncode(System.Net.WebUtility.UrlEncode(roles));
                 }
-                string url = string.Format(@"{0}/orguser/list?orgid={1}&deptids={2}{3}&oauth_token={4} ", appConfig.url, orgid, deptids.getUrlEncodeTypes(), rolestring, getToken());
+                string url = string.Format(@"{0}/orguser/list?orgid={1}&deptids={2}{3}&oauth_token={4}", appConfig.url, orgid, deptids.getUrlEncodeTypes(), rolestring, getToken());
 
                 var content = getHttpContent(url.getLoaderParam(param)).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhUser>>(content);
