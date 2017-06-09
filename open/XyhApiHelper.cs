@@ -228,7 +228,7 @@ namespace com.nbugs.xyh.open
             {
                 string url = string.Format(@"{0}/orguser/all?orgid={1}&oauth_token={2}&page={3}&pagesize={4}", appConfig.url, orgid, getToken(), page, pagesize);
                 if (!string.IsNullOrEmpty(usertype))
-                    url += string.Format("&usertype={0}", usertype);
+                    url += string.Format("&usertype={0}", System.Net.WebUtility.UrlEncode(System.Net.WebUtility.UrlEncode(usertype)));
                 var content = getHttpContent(url.getLoaderParam(param)).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<DataPage<XyhUser>>>(content);
                 if (JResult.code == 0)
