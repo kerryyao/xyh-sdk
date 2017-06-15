@@ -228,7 +228,7 @@ namespace com.nbugs.xyh.open
             {
                 string url = string.Format(@"{0}/orguser/all?orgid={1}&oauth_token={2}&page={3}&pagesize={4}", appConfig.url, orgid, getToken(), page, pagesize);
                 if (!string.IsNullOrEmpty(usertype))
-                    url += string.Format("&usertype={0}", usertype);
+                    url += string.Format("&usertype={0}", System.Net.WebUtility.UrlEncode(System.Net.WebUtility.UrlEncode(usertype)));
                 var content = getHttpContent(url.getLoaderParam(param)).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<DataPage<XyhUser>>>(content);
                 if (JResult.code == 0)
@@ -249,7 +249,10 @@ namespace com.nbugs.xyh.open
             public static XyhOrgnization get(string orgid, string deptid, string properties = null)
             {
                 string url = string.Format(@"{0}/org/get?orgid={1}&deptid={2}&oauth_token={3}", appConfig.url, orgid, deptid, getToken());
-
+                if (!string.IsNullOrEmpty(properties))
+                {
+                    url += string.Format("&properties={0}", properties);
+                }
                 var content = getHttpContent(url).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhOrgnization>>(content);
                 if (JResult.code == 0)
@@ -265,7 +268,10 @@ namespace com.nbugs.xyh.open
             public static List<XyhOrgnization> list(string orgid, List<string> deptids, string properties = null)
             {
                 string url = string.Format(@"{0}/org/list?orgId={1}&deptids={2}&oauth_token={3}", appConfig.url, orgid, deptids.getUrlEncodeTypes(), getToken());
-
+                if (!string.IsNullOrEmpty(properties))
+                {
+                    url += string.Format("&properties={0}", properties);
+                }
                 var content = getHttpContent(url).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhOrgnization>>(content);
                 if (JResult.code == 0)
@@ -291,6 +297,10 @@ namespace com.nbugs.xyh.open
                 {
                     url += "&withSelf=true";
                 }
+                if (!string.IsNullOrEmpty(properties))
+                {
+                    url += string.Format("&properties={0}", properties);
+                }
                 var content = getHttpContent(url).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhOrgnization>>(content);
                 if (JResult.code == 0)
@@ -310,6 +320,10 @@ namespace com.nbugs.xyh.open
                 if (types != null && types.Count > 0)
                 {
                     url += string.Format(@"&types={0}", types.getUrlEncodeTypes());
+                }
+                if (!string.IsNullOrEmpty(properties))
+                {
+                    url += string.Format("&properties={0}", properties);
                 }
                 var content = getHttpContent(url).Result;
                 var JResult = JsonConvert.DeserializeObject<Result<XyhOrgnization>>(content);
