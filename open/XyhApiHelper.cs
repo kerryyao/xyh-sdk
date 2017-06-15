@@ -362,7 +362,7 @@ namespace com.nbugs.xyh.open
         {
             /// <summary>
             /// suguo.yao 2016-11-28
-            /// 文本消息推送
+            /// 文本消息推送 (msgtype=0)
             /// </sumarry>
             public static bool batch(XyhMessage<XyhTextMessage> model)
             {
@@ -384,8 +384,31 @@ namespace com.nbugs.xyh.open
             }
 
             /// <summary>
+            /// suguo.yao 2017-06-15
+            /// 单图文带短信消息推送 (msgtype=1)
+            /// </sumarry>
+            public static bool batch(XyhMessage<XyhNewsMessage> model)
+            {
+                string url = string.Format(@"{0}/msg/pusher/batch?oauth_token={1}", appConfig.url, getToken());
+
+                using (var httpclient = new HttpClient())
+                {
+                    var str = JsonConvert.SerializeObject(model);
+                    HttpContent httpcontent = new StringContent(str);
+                    httpcontent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    HttpResponseMessage resMessage = httpclient.PostAsync(url, httpcontent).Result;
+                    var ret = resMessage.Content.ReadAsStringAsync().Result;
+                    var r = JsonConvert.DeserializeObject<Result<string>>(ret);
+                    if (r.code == 0)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+
+            /// <summary>
             /// suguo.yao 2016-11-28
-            /// 图文消息推送
+            /// 图文消息推送 (msgtype=6)
             /// </sumarry>
             public static bool batch(XyhMessage<XyhNewsList> model)
             {
