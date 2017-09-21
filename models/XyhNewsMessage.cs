@@ -13,8 +13,9 @@ namespace com.nbugs.xyh.models
         public string msg { get; set; }
         public string videoUrl { get; set; }
         public string audioUrl { get; set; }
+        public Link link { get; set; } = new Link();
 
-        public class link
+        public class Link
         {
             public int linkId { get; set; }
             public string urlParams { get; set; }
