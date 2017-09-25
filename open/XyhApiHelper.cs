@@ -383,7 +383,7 @@ namespace com.nbugs.xyh.open
             /// suguo.yao 2017-06-15
             /// 单图文带短信消息推送 (msgtype=1)
             /// </sumarry>
-            public static bool batch(XyhMessage<XyhNewsMessage> model)
+            public static dynamic batch(XyhMessage<XyhNewsMessage> model)
             {
                 string url = string.Format(@"{0}/msg/pusher/batch?oauth_token={1}", appConfig.url, getToken());
 
@@ -394,11 +394,7 @@ namespace com.nbugs.xyh.open
                     httpcontent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                     HttpResponseMessage resMessage = httpclient.PostAsync(url, httpcontent).Result;
                     var ret = resMessage.Content.ReadAsStringAsync().Result;
-                    var r = JsonConvert.DeserializeObject<Result<string>>(ret);
-                    if (r.code == 0)
-                        return true;
-                    else
-                        return false;
+                    return JsonConvert.DeserializeObject<Result<string>>(ret);
                 }
             }
 
