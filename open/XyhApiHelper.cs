@@ -402,7 +402,7 @@ namespace com.nbugs.xyh.open
             /// suguo.yao 2016-11-28
             /// 图文消息推送 (msgtype=6)
             /// </sumarry>
-            public static bool batch(XyhMessage<XyhNewsList> model)
+            public static dynamic batch(XyhMessage<XyhNewsList> model)
             {
                 string url = string.Format(@"{0}/msg/pusher/batch?oauth_token={1}", appConfig.url, getToken());
 
@@ -413,11 +413,7 @@ namespace com.nbugs.xyh.open
                     httpcontent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                     HttpResponseMessage resMessage = httpclient.PostAsync(url, httpcontent).Result;
                     var ret = resMessage.Content.ReadAsStringAsync().Result;
-                    var r = JsonConvert.DeserializeObject<Result<string>>(ret);
-                    if (r.code == 0)
-                        return true;
-                    else
-                        return false;
+                    return JsonConvert.DeserializeObject<Result<string>>(ret);
                 }
             }
         }
